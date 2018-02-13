@@ -134,8 +134,8 @@ app.post('/user_profiles', function (req, res) {
         connection.execute("INSERT INTO user_profiles VALUES " +
             "(:USER_NAME, :DISPLAY_NAME, :DESCRIPTION, :GENDER," +
             ":AGE, :COUNTRY, :THEME) ", [req.body.USER_NAME, req.body.DISPLAY_NAME,
-                            req.body.DESCRIPTION, req.body.GENDER, req.body.AGE, req.body.COUNTRY,
-                            req.body.THEME], {
+            req.body.DESCRIPTION, req.body.GENDER, req.body.AGE, req.body.COUNTRY,
+            req.body.THEME], {
                 autoCommit: true,
                 outFormat: oracledb.OBJECT // Return the result as Object
             },
@@ -239,9 +239,9 @@ app.put('/user_profiles/:USER_NAME', function (req, res) {
 
         var updateStatement = buildUpdateStatement(req);
         connection.execute(updateStatement.statement, updateStatement.bindValues, {
-                autoCommit: true,
-                outFormat: oracledb.OBJECT // Return the result as Object
-            },
+            autoCommit: true,
+            outFormat: oracledb.OBJECT // Return the result as Object
+        },
             function (err, result) {
                 if (err || result.rowsAffected === 0) {
                     // Error
@@ -317,13 +317,13 @@ app.delete('/user_profiles/:USER_NAME', function (req, res) {
 });
 
 // Response in root
-app.get('*', function(req, res) {
+app.get('/', function (req, res) {
     res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
-});  
+});
 
 app.use('/js', express.static(__dirname + '/js'));
 
-var server = app.listen(8000, "127.0.0.1" , function () {
+var server = app.listen(8000, "127.0.0.1", function () {
     "use strict";
 
     var host = server.address().address,
