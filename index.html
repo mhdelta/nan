@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="LecterApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="public/app.js"></script>
+    <script type="text/javascript" src="public/controllers/Main.ctr.js"></script>
+    <script type="text/javascript" src="public/controllers/Compra.ctr.js"></script>
+    <script type="text/javascript" src="public/controllers/Venta.ctr.js"></script>
+    <script type="text/javascript" src="public/controllers/Info.ctr.js"></script>
+    <script type="text/javascript" src="public/config.js"></script>
+    <title>Lecter</title>
+</head>
+
+<body ng-controller="MainController">
+    <div ng-view></div>
+</body>
+
+</html>

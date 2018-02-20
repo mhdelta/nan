@@ -6,8 +6,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var oracledb = require('oracledb');
 
-var path = require('path');
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 // Use body parser to parse JSON body
 app.use(bodyParser.json());
@@ -318,10 +317,14 @@ app.delete('/user_profiles/:USER_NAME', function (req, res) {
 
 // Response in root
 app.get('/', function (req, res) {
-    res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+    res.sendfile('./index.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
 
-app.use('/js', express.static(__dirname + '/js'));
+
+// var path = require('path');
+// app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/public', express.static('public'));
 
 var server = app.listen(8000, "127.0.0.1", function () {
     "use strict";
