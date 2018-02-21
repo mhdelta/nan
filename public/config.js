@@ -20,7 +20,9 @@ function configApp($routeProvider) {
         })
         .when("/compra-helados", {
             controller: "CompraController",
-            templateUrl: "/public/views/CompraHelados.view.html"            
+            templateUrl: "/public/views/CompraHelados.view.html",
+            controllerAs: "vm"
+                        
         })
         .when("/venta", {
             templateUrl: "/public/views/Venta.view.html",
@@ -28,6 +30,7 @@ function configApp($routeProvider) {
         })
         .when("/venta-helados", {
             controller: "VentaController",
+            controllerAs: "vm",            
             templateUrl: "/public/views/VentaHelados.view.html"            
         })
         .when("/info", {
