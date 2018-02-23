@@ -1,1 +1,1 @@
-var app = angular.module("LecterApp", ["ngRoute"]);
+var app = angular.module("LecterApp", ["ngRoute", 'ui.select', 'ngSanitize']);

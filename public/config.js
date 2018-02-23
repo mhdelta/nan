@@ -24,6 +24,12 @@ function configApp($routeProvider) {
             controllerAs: "vm"
                         
         })
+        .when("/compra-cerveza", {
+            controller: "CompraController",
+            templateUrl: "/public/views/CompraCerveza.view.html",
+            controllerAs: "vm"
+                        
+        })
         .when("/venta", {
             templateUrl: "/public/views/Venta.view.html",
             controllerAs: "vm"

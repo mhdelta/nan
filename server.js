@@ -15,69 +15,12 @@ var connAttrs = {
     "user": "SYSTEM",
     "password": "mh3364060",
     "connectString": "localhost/XE"
-}
+};
 
 // Http method: POST
-// URI        : /user_profiles
-// Creates a new user profile
-app.post('/user_profiles', function (req, res) {
-    "use strict";
-    if ("application/json" !== req.get('Content-Type')) {
-        res.set('Content-Type', 'application/json').status(415).send(JSON.stringify({
-            status: 415,
-            message: "Wrong content-type. Only application/json is supported",
-            detailed_message: null
-        }));
-        return;
-    }
-    oracledb.getConnection(connAttrs, function (err, connection) {
-        if (err) {
-            // Error connecting to DB
-            res.set('Content-Type', 'application/json').status(500).send(JSON.stringify({
-                status: 500,
-                message: "Error connecting to DB",
-                detailed_message: err.message
-            }));
-            return;
-        }
-        connection.execute("INSERT INTO user_profiles VALUES " +
-            "(:USER_NAME, :DISPLAY_NAME, :DESCRIPTION, :GENDER," +
-            ":AGE, :COUNTRY, :THEME) ", [req.body.USER_NAME, req.body.DISPLAY_NAME,
-            req.body.DESCRIPTION, req.body.GENDER, req.body.AGE, req.body.COUNTRY,
-            req.body.THEME], {
-                autoCommit: true,
-                outFormat: oracledb.OBJECT // Return the result as Object
-            },
-            function (err, result) {
-                if (err) {
-                    // Error
-                    res.set('Content-Type', 'application/json');
-                    res.status(400).send(JSON.stringify({
-                        status: 400,
-                        message: err.message.indexOf("ORA-00001") > -1 ? "User already exists" : "Input Error",
-                        detailed_message: err.message
-                    }));
-                } else {
-                    // Successfully created the resource
-                    res.status(201).set('Location', '/user_profiles/' + req.body.USER_NAME).end();
-                }
-                // Release the connection
-                connection.release(
-                    function (err) {
-                        if (err) {
-                            console.error(err.message);
-                        } else {
-                            console.log("POST /user_profiles : Connection released");
-                        }
-                    });
-            });
-    });
-});
-
-// Http method: POST
-// URI        : /registrarCompra
+// URI        : /registrar_compra_helado
 // Crea una nueva compra de helados
-app.post('/registrarCompra', function (req, res) {
+app.post('/registrar_compra_helado', function (req, res) {
     "use strict";
     if ("application/json" !== req.get('Content-Type')) {
         res.set('Content-Type', 'application/json').status(415).send(JSON.stringify({
@@ -98,23 +41,23 @@ app.post('/registrarCompra', function (req, res) {
             return;
         }
         connection.execute("INSERT INTO COMPRAS_HELADOS VALUES " +
-            "(:CANTIDAD, :SABOR, :PRECIO_UNITARIO) ", [req.body.CANTIDAD, req.body.SABOR,
-            req.body.PRECIO_UNITARIO], {
+            "(:CANTIDAD, :SABOR, :PRECIO_UNITARIO, :FECHA) ", [req.body.CANTIDAD, req.body.SABOR,
+            req.body.PRECIO_UNITARIO, req.body.FECHA], {
                 autoCommit: true,
                 outFormat: oracledb.OBJECT // Return the result as Object
             },
             function (err, result) {
                 if (err) {
                     // Error
-                    res.set('Content-Type', 'application/json');
+                    res.set('Content-Type', 'application/json');        
                     res.status(400).send(JSON.stringify({
                         status: 400,
-                        message: err.message.indexOf("ORA-00001") > -1 ? "User already exists" : "Input Error",
+                        message: err,
                         detailed_message: err.message
-                    }));
+                    }));          
                 } else {
                     // Successfully created the resource
-                    res.status(201).set('Location', '/registrarCompra/' + req.body.CANTIDAD).end();
+                    res.status(201).set('Location', '/registrar_compra_helado/' + req.body.CANTIDAD).end();
                 }
                 // Release the connection
                 connection.release(
@@ -122,7 +65,62 @@ app.post('/registrarCompra', function (req, res) {
                         if (err) {
                             console.error(err.message);
                         } else {
-                            console.log("POST /registrarCompra : Connection released");
+                            console.log("POST /registrar_compra_helado : Connection released");
+                        }
+                    });
+            });
+    });
+});
+
+// Http method: POST
+// URI        : /registrar_compra_cerveza
+// Crea una nueva compra de helados
+app.post('/registrar_compra_cerveza', function (req, res) {
+    "use strict";
+    if ("application/json" !== req.get('Content-Type')) {
+        res.set('Content-Type', 'application/json').status(415).send(JSON.stringify({
+            status: 415,
+            message: "Wrong content-type. Only application/json is supported",
+            detailed_message: null
+        }));
+        return;
+    }
+    oracledb.getConnection(connAttrs, function (err, connection) {
+        if (err) {
+            // Error connecting to DB
+            res.set('Content-Type', 'application/json').status(500).send(JSON.stringify({
+                status: 500,
+                message: "Error connecting to DB",
+                detailed_message: err.message
+            }));
+            return;
+        }
+        connection.execute("INSERT INTO COMPRAS_CERVEZAS VALUES " +
+            "(:CANTIDAD, :PRECIO_UNITARIO, :FECHA) ", [req.body.CANTIDAD,
+            req.body.PRECIO_UNITARIO, req.body.FECHA], {
+                autoCommit: true,
+                outFormat: oracledb.OBJECT // Return the result as Object
+            },
+            function (err, result) {
+                if (err) {
+                    // Error
+                    res.set('Content-Type', 'application/json');        
+                    res.status(400).send(JSON.stringify({
+                        status: 400,
+                        message: err,
+                        detailed_message: err.message
+                    }));          
+                } else {
+                    // Successfully created the resource
+                    res.status(201).set('Location', '/registrar_compra_cerveza/' + req.body.CANTIDAD).end();
+                }
+                // Release the connection
+                connection.release(
+                    function (err) {
+                        if (err) {
+                            console.error(err.message);
+                        } else {
+                            console.log("POST /registrar_compra_cerveza : Connection released");
                         }
                     });
             });
@@ -139,6 +137,7 @@ app.get('/', function (req, res) {
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/public', express.static('public'));
+app.use('/node_modules', express.static('node_modules'));
 
 var server = app.listen(8000, "0.0.0.0", function () {
     "use strict";
