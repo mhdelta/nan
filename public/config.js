@@ -39,6 +39,11 @@ function configApp($routeProvider) {
             controllerAs: "vm",            
             templateUrl: "/public/views/VentaHelados.view.html"            
         })
+        .when("/venta-cerveza", {
+            controller: "VentaController",
+            controllerAs: "vm",            
+            templateUrl: "/public/views/VentaCerveza.view.html"            
+        })
         .when("/info", {
             controllerAs: "vm",
             controller: "InfoController",
