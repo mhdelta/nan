@@ -1,7 +1,7 @@
 app = angular.module("LecterApp");
 
 app.controller("VentaController", VentaController);
-function VentaController($scope, $http, $q){
+function VentaController($scope, $http, $q) {
     $scope.$on("$destroy", function () {
         vm = null;
         delete $scope.vm;
@@ -10,89 +10,28 @@ function VentaController($scope, $http, $q){
 
     //Variables
     vm.venta = {
-        CANTIDAD: null,
-        SABOR: null,
-        PRECIO_VENTA: null,
-        FECHA_VENTA: null,
-        CLIENTE: null
+        cantidad: null,
+        sabor: null,
+        precio_venta: null,
+        fecha_venta: null,
+        cliente: null
     };
     vm.submit = false;
     // En una futura actualización la variable 
     // vm.sabores se llenará automaticamente con
     // información proveniente del servidor
-    vm.sabores = [
-        {
-            'key': 0,
-            'value': 'COCO'
-        },
-        {
-            'key': 1,
-            'value': 'CHOCOLATE'
-        },
-        {
-            'key': 2,
-            'value': 'MARACUYA'
-        },
-        {
-            'key': 3,
-            'value': 'AREQUIPE'
-        },
-        {
-            'key': 4,
-            'value': 'VAINILLA'
-        },
-        {
-            'key': 5,
-            'value': 'COOKIES AND CREAM'
-        },
-        {
-            'key': 7,
-            'value': 'MORA'
-        },
-        {
-            'key': 8,
-            'value': 'RON CON PASAS'
-        },
-        {
-            'key': 9,
-            'value': 'QUESO Y BOCADILLO'
-        }
-    ];
+    vm.sabores;
     vm.selected;
 
-    vm.clientes = [
-        {
-            'key': 0,
-            'value': 'LATINO SPORT'
-        },
-        {
-            'key': 1,
-            'value': 'EL DIAMANTE'
-        },
-        {
-            'key': 2,
-            'value': 'SOCRATES VALENCIA'
-        },
-        {
-            'key': 3,
-            'value': 'HERBALIFE'
-        },
-        {
-            'key': 4,
-            'value': 'BOCA JUNIOR'
-        },
-        {
-            'key': 5,
-            'value': 'COMFAMILIAR'
-        },
-        {
-            'key': 7,
-            'value': 'DEPORTIVO PEREIRA'
-        }
-    ];
+    vm.clientes;
     vm.selected2;
     //Métodos
-
+    vm.agregarCliente = AgregarCliente;
+    vm.agregarClienteBD = AgregarClienteBD;
+    vm.inicializarClientes = InicializarClientes;
+    vm.inicializarSabores = InicializarSabores;
+    vm.traerSabores = TraerSabores;
+    vm.traerClientes = TraerClientes;
     vm.RegistrarVenta = RegistrarVenta;
     vm.inictr = Inictr;
     vm.RegistrarVentaHeladosBD = RegistrarVentaHeladosBD;
@@ -110,10 +49,10 @@ function VentaController($scope, $http, $q){
      */
     function Inictr() {
         try {
-
+            vm.inicializarClientes();
+            vm.inicializarSabores();
         } catch (error) {
             console.log(error);
-
         }
     }
     /**
@@ -126,16 +65,21 @@ function VentaController($scope, $http, $q){
         try {
             // La fecha debe de ser formateada para que el SQL la entienda
             var d = new Date();
-            vm.venta.FECHA_VENTA = d.getDate().toString() + "/" + d.getMonth().toString() + "/" + d.getFullYear().toString();
+            vm.venta.fecha_venta = d.getDate().toString() + "/" + d.getMonth().toString() + "/" + d.getFullYear().toString();
             switch (producto) {
                 case "helado":
-                    vm.venta.SABOR = vm.selected.value;
-                    vm.venta.CLIENTE = vm.selected2.value;
+                    vm.venta.sabor = vm.selected.sabor.sabor;
+                    vm.venta.cliente = vm.selected.cliente;
+                    var listaClientes = vm.selected.cliente.map(a => a.cliente);
+                    vm.venta.cliente = listaClientes;
+                    vm.venta.type = "helado";
                     vm.RegistrarVentaHeladosBD(vm.venta)
                         .then(function (response) {
                             if (response.status == 201) {
                                 swal('Bien..!', 'Los datos se guardaron satisfactoriamente!', 'success');
                                 vm.clean();
+                            } else if (response.status == 203) {
+                                swal('Oops...', 'No existe tal cantidad en el inventario. \n Existencias insuficientes', 'error');                                
                             } else {
                                 swal('Oops...', 'No se guardaron los datos!', 'error');
                             }
@@ -146,6 +90,7 @@ function VentaController($scope, $http, $q){
                     break;
 
                 case "cerveza":
+                    delete vm.compra.sabor;
                     vm.RegistrarVentaCervezaBD(vm.venta)
                         .then(function (response) {
                             if (response.status == 201) {
@@ -234,17 +179,129 @@ function VentaController($scope, $http, $q){
             console.log(e);
         }
     }
+
+    function AgregarCliente() {
+        try {
+            bootbox.prompt("Nombre del nuevo Cliente", function (result) {
+                if (result) {
+                    data = {}
+                    data.cliente = result.toLowerCase();
+                    vm.agregarClienteBD(data)
+                        .then(function (response) {
+                            if (response.status == 201) {
+                                swal({
+                                    title: "Bien !",
+                                    text: "Se agrego el cliente con éxito!",
+                                    type: "success"
+                                });
+                                vm.inicializarClientes();
+                            }
+                            else {
+                                if (response.status == 202) {
+                                    swal('Oops...', 'El cliente ya existe, prueba con otro!', 'error');
+                                } else {
+                                    swal('Oops...', 'Ocurrió un error agregando el cliente', 'error');
+                                }
+
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
+            });
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    function AgregarClienteBD(data) {
+        try {
+            return vm.ConsumeServicePromise($q, $http, "/agregar_cliente", data);
+        } catch (error) {
+            new UserException(error, "no es posible agregar el cliente");
+        }
+    }
+
+    function InicializarClientes() {
+        try {
+            vm.traerClientes()
+                .then(function (response) {
+                    if (response.status == 201) {
+                        console.log("Se inicializaron los clientes");
+                        vm.clientes = response.data;
+                    } else {
+                        swal('Oops...', 'No se guardaron los datos!', 'error');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    function InicializarSabores() {
+        try {
+            vm.traerSabores()
+                .then(function (response) {
+                    if (response.status == 201) {
+                        console.log("Se inicializaron los sabores");
+                        vm.sabores = response.data;
+                    } else {
+                        swal('Oops...', 'No se guardaron los datos!', 'error');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    /**
+ * @description Devuelve una promesa con la respuesta del 
+ * servidor al envio de la compra
+ * @author Miguel Ángel Henao Pérez
+ * @return promise
+ */
+    function TraerSabores() {
+        try {
+            return vm.ConsumeServicePromise($q, $http, "/inicializar_sabores");
+        } catch (error) {
+            new UserException(error, "no es posible inicializar los sabores");
+        }
+    }
+
+
+    /**
+ * @description Devuelve una promesa con la respuesta del 
+ * servidor al envio de la compra
+ * @author Miguel Ángel Henao Pérez
+ * @return promise
+ */
+    function TraerClientes() {
+        try {
+            return vm.ConsumeServicePromise($q, $http, "/inicializar_clientes");
+        } catch (error) {
+            new UserException(error, "no es posible inicializar los clientes");
+        }
+    }
+
     /**
      * @description Limpia las propiedades del view model
      * @author Miguel Ángel Henao Pérez
      * @return {void}
      */
     function Clean() {
-        vm.venta.CANTIDAD = null;
-        vm.venta.SABOR = null;
-        vm.venta.PRECIO_VENTA = null;
-        vm.venta.FECHA_VENTA = null;
+        vm.venta.cantidad = null;
+        vm.venta.sabor = null;
+        vm.venta.precio_venta = null;
+        vm.venta.fecha_venta = null;
         vm.selected = null;
+        vm.selected2 = null;
     }
 }
 

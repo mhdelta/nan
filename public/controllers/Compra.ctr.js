@@ -11,61 +11,26 @@ function CompraController($scope, $http, $q) {
 
     //Variables
     vm.compra = {
-        CANTIDAD: null,
-        SABOR: null,
-        PRECIO_UNITARIO: null,
-        FECHA: null
+        cantidad: null,
+        sabor: null,
+        precio_unitario: null,
+        fecha: null
     };
     vm.submit = false;
-    // En una futura actualización la variable 
-    // vm.sabores se llenará automaticamente con
-    // información proveniente del servidor
-    vm.sabores = [
-        {
-            'key': 0,
-            'value': 'COCO'
-        },
-        {
-            'key': 1,
-            'value': 'CHOCOLATE'
-        },
-        {
-            'key': 2,
-            'value': 'MARACUYA'
-        },
-        {
-            'key': 3,
-            'value': 'AREQUIPE'
-        },
-        {
-            'key': 4,
-            'value': 'VAINILLA'
-        },
-        {
-            'key': 5,
-            'value': 'COOKIES AND CREAM'
-        },
-        {
-            'key': 7,
-            'value': 'MORA'
-        },
-        {
-            'key': 8,
-            'value': 'RON CON PASAS'
-        },
-        {
-            'key': 9,
-            'value': 'QUESO Y BOCADILLO'
-        }
-    ];
+    vm.sabores;
     vm.selected;
     //Métodos
 
+    vm.agregarSabor = AgregarSabor;
+    vm.agregarSaborBD = AgregarSaborBD;
     vm.RegistrarCompra = RegistrarCompra;
     vm.inictr = Inictr;
+    vm.inicializarSabores = InicializarSabores;
+    vm.traerSabores = TraerSabores;
     vm.RegistrarCompraHeladosBD = RegistrarCompraHeladosBD;
     vm.RegistrarCompraCervezaBD = RegistrarCompraCervezaBD;
     vm.ConsumeServicePromise = ConsumeServicePromise;
+    vm.tooBig = TooBig;
     vm.clean = Clean;
 
 
@@ -78,12 +43,67 @@ function CompraController($scope, $http, $q) {
      */
     function Inictr() {
         try {
-
+            vm.inicializarSabores();
         } catch (error) {
             console.log(error);
 
         }
     }
+
+    function InicializarSabores() {
+        try {
+            vm.traerSabores()
+                .then(function (response) {
+                    if (response.status == 201) {
+                        console.log("Se inicializaron los sabores");
+                        vm.sabores = response.data;
+                    } else {
+                        swal('Oops...', 'No se guardaron los datos!', 'error');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    function AgregarSabor() {
+        try {
+            bootbox.prompt("Nombre del nuevo sabor", function (result) {
+                if (result) {
+                    data = {}
+                    data.sabor = result.toLowerCase();
+                    vm.agregarSaborBD(data)
+                        .then(function (response) {
+                            if (response.status == 201) {
+                                swal({
+                                    title: "Bien !",
+                                    text: "Se agrego el sabor con éxito!",
+                                    type: "success"
+                                });
+                                vm.inicializarSabores();
+                            }
+                            else {
+                                if (response.status == 202) {
+                                    swal('Oops...', 'El sabor ya existe, prueba con otro!', 'error');
+                                } else {
+                                    swal('Oops...', 'Ocurrió un error agregando el sabor', 'error');
+                                }
+
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
+            });
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     /**
      * @description Envia la peticion al back con la compra a realizar, 
      * los datos de la compra son sabor, cantidad, precio/unidad y la fecha
@@ -94,14 +114,19 @@ function CompraController($scope, $http, $q) {
         try {
             // La fecha debe de ser formateada para que el SQL la entienda
             var d = new Date();
-            vm.compra.FECHA = d.getDate().toString() + "/" + d.getMonth().toString() + "/" + d.getFullYear().toString();
+            vm.compra.fecha = d.getDate().toString() + "/" + d.getMonth().toString() + "/" + d.getFullYear().toString();
+            vm.tooBig();
+            if (!vm.validSize) {
+                return;
+            }
             switch (producto) {
                 case "helado":
-                    vm.compra.SABOR = vm.selected.value;
+                    vm.compra.sabor = vm.selected.sabor.sabor;
                     vm.RegistrarCompraHeladosBD(vm.compra)
                         .then(function (response) {
                             if (response.status == 201) {
                                 swal('Bien..!', 'Los datos se guardaron satisfactoriamente!', 'success');
+                                console.log(response.data);
                                 vm.clean();
                             } else {
                                 swal('Oops...', 'No se guardaron los datos!', 'error');
@@ -113,10 +138,12 @@ function CompraController($scope, $http, $q) {
                     break;
 
                 case "cerveza":
+                    delete vm.compra.sabor;
                     vm.RegistrarCompraCervezaBD(vm.compra)
                         .then(function (response) {
                             if (response.status == 201) {
                                 swal('Bien..!', 'Los datos se guardaron satisfactoriamente!', 'success');
+                                console.log(response.data);
                                 vm.clean();
                             } else {
                                 swal('Oops...', 'No se guardaron los datos!', 'error');
@@ -133,6 +160,32 @@ function CompraController($scope, $http, $q) {
         } catch (error) {
             console.log(error);
 
+        }
+    }
+
+    function TooBig() {
+        vm.validSize = true;
+        if (vm.compra.cantidad > 100000 || vm.compra.cantidad<1) {
+            swal('Oops...', 'Nahh, La cantidad no es válida', 'error');
+            vm.validSize = false;
+        }
+        if(vm.compra.precio_unitario > 100000 || vm.compra.precio_unitario < 1){
+            swal('Oops...', 'Nahh, El precio no es válido', 'error');
+            vm.validSize = false;
+        }
+    }
+
+    /**
+     * @description Devuelve una promesa con la respuesta del 
+     * servidor al envio de la compra
+     * @author Miguel Ángel Henao Pérez
+     * @return promise
+     */
+    function TraerSabores() {
+        try {
+            return vm.ConsumeServicePromise($q, $http, "/inicializar_sabores");
+        } catch (error) {
+            new UserException(error, "no es posible inicializar los sabores");
         }
     }
     /**
@@ -155,6 +208,14 @@ function CompraController($scope, $http, $q) {
             return vm.ConsumeServicePromise($q, $http, "/registrar_compra_cerveza", data);
         } catch (error) {
             new UserException(error, "no es posible anadir la compra");
+        }
+    }
+
+    function AgregarSaborBD(data) {
+        try {
+            return vm.ConsumeServicePromise($q, $http, "/agregar_sabor", data);
+        } catch (error) {
+            new UserException(error, "no es posible agregar el sabor");
         }
     }
 
@@ -207,10 +268,10 @@ function CompraController($scope, $http, $q) {
      * @return {void}
      */
     function Clean() {
-        vm.compra.CANTIDAD = null;
-        vm.compra.SABOR = null;
-        vm.compra.PRECIO_UNITARIO = null;
-        vm.compra.FECHA = null;
+        vm.compra.cantidad = null;
+        vm.compra.sabor = null;
+        vm.compra.precio_unitario = null;
+        vm.compra.fecha = null;
         vm.selected = null;
     }
 }

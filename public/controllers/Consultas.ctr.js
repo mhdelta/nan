@@ -1,7 +1,7 @@
 app = angular.module("LecterApp");
 
-app.controller("InfoController", InfoController);
-function InfoController($scope){
+app.controller("ConsultasController", ConsultasController);
+function ConsultasController($scope){
     var vm = this;
     console.log("Info controller working...");
 }

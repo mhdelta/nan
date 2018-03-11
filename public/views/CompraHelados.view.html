@@ -1,53 +1,69 @@
-<div class="row">
+<div class="row well">
     <div class="col-md-12">
-        <div class="text text-info col-md-4">
-            <h1 class="display-1 text-center">Cantidad</h1>
-            <div class="input-group" ng-class="(vm.submit && cantidad.$error.required) ? 'has-error' : ''">
-                <span class="input-group-addon">
-                    <i class="fa fa-calculator"></i>
-                </span>
-                <input id="cantidad" type="number" class="form-control" name="cantidad" placeholder="Cantidad" ng-model="vm.compra.CANTIDAD"
-                    required>
-            </div>
+        <div class=" text text-info pull-left btn-block" style="font-family: Georgia, serif">
+            <h2>Compra De Helados</h2>
         </div>
-        <div class="text text-danger col-md-4">
-            <h1 class="display-1 text-center">Sabor</h1>
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <i class="fa fa-beer"></i>
-                </span>
-                <ui-select tagging ng-model="vm.selected" theme="bootstrap" style="width: 100%">
-                    <ui-select-match placeholder="Sabores...">{{$select.selected.value}}</ui-select-match>
-                    <ui-select-choices repeat="val in vm.sabores | filter: $select.search track by val.value">
-                        <span ng-bind-html="val.value | highlight: $select.search"></span>
-                        <!-- <div ng-bind="val.value | highlight: $select.search"></div> -->
-                    </ui-select-choices>
-                </ui-select>
-            </div>
-        </div>
-        <div class="text text-warning col-md-4">
-            <h1 class="display-1 text-center">Precio por unidad</h1>
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <i class="fa fa-dollar-sign"></i>
-                </span>
-                <!-- Select2 aquí -->
-                <input id="Precio" type="number" class="form-control" name="Precio" placeholder="Precio unitario" ng-model="vm.compra.PRECIO_UNITARIO">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-            </div>
-            <div class="text text-success col-md-4 text-center">
-                <h1 class="display-1 text-center">
-                    <br> Registrar Compra</h1>
-                <button ng-click="vm.RegistrarCompra('helado'); vm.submit = true" class="btn btn-block btn-success btn-lg">
-                    <span>
-                        <i class="fa fa-save"></i>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text text-info col-md-4">
+                <h1 class="display-1 text-center">Cantidad</h1>
+                <div class="input-group" ng-class="(vm.submit && cantidad.$error.required) ? 'has-error' : ''">
+                    <span class="input-group-addon">
+                        <i class="fa fa-calculator"></i>
                     </span>
-                </button>
+                    <input id="cantidad" type="number" class="form-control" name="cantidad" placeholder="Cantidad" ng-model="vm.compra.cantidad"
+                        required>
+                </div>
             </div>
-            <div class="col-md-4">
+            <div class="text text-danger col-md-4">
+                <h1 class="display-1 text-center">Sabor</h1>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-beer"></i>
+                    </span>
+                    <ui-select tagging ng-model="vm.selected.sabor" theme="bootstrap" style="width: 100%">
+                        <ui-select-match placeholder="Sabores...">{{$select.selected.sabor}}</ui-select-match>
+                        <ui-select-choices repeat="item in (vm.sabores | filter: $select.search) track by item.sabor">
+                            <span ng-bind-html="item.sabor | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="text text-warning col-md-4">
+                <h1 class="display-1 text-center">Precio por unidad</h1>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-dollar-sign"></i>
+                    </span>
+                    <!-- Select2 aquí -->
+                    <input id="Precio" type="number" class="form-control" name="Precio" placeholder="Precio unitario" ng-model="vm.compra.precio_unitario">
+                </div>
+            </div>
+            <div class="row">
+                <div class="text text-info col-md-6 text-center">
+                    <h1 class="display-1 text-center">
+                        <br> Añadir sabor</h1>
+                    <button ng-click="vm.agregarSabor()" class="btn btn-block btn-info btn-lg">
+                        <span>
+                            <i class="fa fa-save"></i>
+                        </span>
+                    </button>
+                </div>
+                <div class="text text-success col-md-6 text-center">
+                    <h1 class="display-1 text-center">
+                        <br> Registrar Compra</h1>
+                    <button ng-click="vm.RegistrarCompra('helado'); vm.submit = true" class="btn btn-block btn-success btn-lg">
+                        <span>
+                            <i class="fa fa-save"></i>
+                        </span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

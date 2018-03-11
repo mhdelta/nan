@@ -17,13 +17,14 @@
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="./node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
     <!-- STYLES -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.20.0/select.css">
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css"> -->
+    <link rel="stylesheet" href="assets/css/Footer-with-button-logo.css">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap2.min.css"> -->
 
     <!-- FILES -->
@@ -31,7 +32,7 @@
     <script type="text/javascript" src="public/controllers/Main.ctr.js"></script>
     <script type="text/javascript" src="public/controllers/Compra.ctr.js"></script>
     <script type="text/javascript" src="public/controllers/Venta.ctr.js"></script>
-    <script type="text/javascript" src="public/controllers/Info.ctr.js"></script>
+    <script type="text/javascript" src="public/controllers/Consultas.ctr.js"></script>
     <script type="text/javascript" src="public/config.js"></script>
     <title>Lecter</title>
 </head>
@@ -51,14 +52,35 @@
                 </div>
             </div>
         </div>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
         <div ng-view></div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+    <!-- <footer id="myFooter">
+            <div class="row">
+                <div class="col-md-12">
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email address</label>
+                            <input ng-model="vm.email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                        </div>
+                    </form>
+                    <button type="button" class="btn btn-default" onclick="alert('...Update coming soon..!')">Sing up</button>
+                </div>
+            </div>
+        <div class="footer-copyright">
+            <p>© 2018 Made by Miguel Ángel Henao, with love
+                <3</p>
         </div>
-
+    </footer> -->
 </body>
 
 </html>

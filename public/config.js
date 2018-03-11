@@ -21,8 +21,7 @@ function configApp($routeProvider) {
         .when("/compra-helados", {
             controller: "CompraController",
             templateUrl: "/public/views/CompraHelados.view.html",
-            controllerAs: "vm"
-                        
+            controllerAs: "vm",         
         })
         .when("/compra-cerveza", {
             controller: "CompraController",
@@ -44,10 +43,10 @@ function configApp($routeProvider) {
             controllerAs: "vm",            
             templateUrl: "/public/views/VentaCerveza.view.html"            
         })
-        .when("/info", {
+        .when("/consultas", {
             controllerAs: "vm",
-            controller: "InfoController",
-            templateUrl: "/public/views/Info.view.html"
+            controller: "ConsultasController",
+            templateUrl: "/public/views/Consultas.view.html"
         })
         //other whens removed
         .otherwise({
