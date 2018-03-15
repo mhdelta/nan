@@ -132,7 +132,30 @@ app.post('/registrar_compra_cerveza', function (req, res) {
 
             } else {
                 console.log("Compra de cerveza realizada!");
-                res.send(201, "Everything went alright");
+                //Modificar inventario
+                dbo.collection("inventario").updateOne(
+                    {
+                        "precio": req.body.precio_unitario,
+                        "type": "cerveza"
+                    },
+                    {
+                        $inc: {
+                            "cantidad": req.body.cantidad
+                        }
+                    },
+                    {
+                        upsert: true,
+                    }, function (err, resp) {
+                        if (err) {
+                            res.send(500, err);
+                            return;
+
+                        } else {
+                            console.log("Inventario actualizado");
+                            res.send(201, "Everything went alright");
+                        }
+                        db.close();
+                    });
             }
             db.close();
         });
@@ -157,6 +180,11 @@ app.post('/registrar_compra_helado', function (req, res) {
             } else {
                 console.log("Compra de helado realizada!");
                 //Modificar inventario
+                if(req.body.precio_unitario >= 1500){
+                    req.body.categoria = "Grande";
+                }else{
+                    req.body.categoria = "Pequeño";                    
+                }
                 dbo.collection("inventario").updateOne(
                     {
                         "sabor": req.body.sabor,
@@ -166,7 +194,6 @@ app.post('/registrar_compra_helado', function (req, res) {
                     {
                         $inc: {
                             "cantidad": req.body.cantidad
-
                         }
                     },
                     {
@@ -269,8 +296,12 @@ app.post('/registrar_venta_helado', function (req, res) {
             });
     });
 });
-
-//Verify Json
+/**
+ * @description Función que verifica que el elemento que reciba sea un Json
+ * @author Miguel Ángel Henao Pérez
+ * @param  {any} req 
+ * @return  
+ */
 function VerifyJson(req) {
     if ("application/json" !== req.get('Content-Type')) {
         res.set('Content-Type', 'application/json').status(415).send(JSON.stringify({
@@ -281,7 +312,12 @@ function VerifyJson(req) {
         return;
     }
 }
-
+/**
+ * @description Pone los valores con las primeras letras en mayus
+ * @author Miguel Ángel Henao Pérez
+ * @param  {any} str 
+ * @return  
+ */
 function toTitleCase(str) {
     return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
 }
