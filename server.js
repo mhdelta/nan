@@ -11,6 +11,9 @@ var url = "mongodb://SYSTEM:12345@ds257848.mlab.com:57848/heladosdb";
 // Use body parser to parse JSON body
 app.use(bodyParser.json());
 
+precioCompraHeladoGrande = 1500;
+precioVentaHeladoGrande = 2500;
+
 // Http method: POST
 // URI        : /inicializar_sabores
 // Inicializa los valores del ui-select
@@ -171,6 +174,12 @@ app.post('/registrar_compra_helado', function (req, res) {
         if (err) return console.log(err);
         var dbo = db.db("heladosdb");
         req.body.type = "helado";
+        //Modificar inventario
+        if (req.body.precio_unitario >= precioCompraHeladoGrande) {
+            req.body.categoria = "Grande";
+        } else {
+            req.body.categoria = "Pequeño";
+        }
         //Registrar la compra
         dbo.collection("compras").insertOne(req.body, function (err, resp) {
             if (err) {
@@ -179,16 +188,11 @@ app.post('/registrar_compra_helado', function (req, res) {
 
             } else {
                 console.log("Compra de helado realizada!");
-                //Modificar inventario
-                if(req.body.precio_unitario >= 1500){
-                    req.body.categoria = "Grande";
-                }else{
-                    req.body.categoria = "Pequeño";                    
-                }
                 dbo.collection("inventario").updateOne(
                     {
                         "sabor": req.body.sabor,
                         "precio": req.body.precio_unitario,
+                        "categoria": req.body.categoria,
                         "type": "helado"
                     },
                     {
@@ -224,17 +228,52 @@ app.post('/registrar_venta_cerveza', function (req, res) {
         if (err) return console.log(err);
         var dbo = db.db("heladosdb");
         req.body.type = "cerveza";
-        dbo.collection("ventas").insertOne(req.body, function (err, resp) {
-            if (err) {
-                res.send(500, err);
-                return;
+        console.log(req.body);
+        var validQty = dbo.collection('inventario').findOne(
+            {
+                "type": "cerveza",
+                "cantidad": { $gte: req.body.cantidad },
+            }, function (err, prod) {
+                if (prod == null) {
+                    db.close();
+                    res.send(203, "No hay tal cantidad en inventarios");
+                    return;
+                } else {
+                    //Modificar inventario
+                    dbo.collection("ventas").insertOne(req.body, function (err, resp) {
+                        if (err) {
+                            res.send(500, err);
+                            return;
 
-            } else {
-                console.log("venta de cerveza realizada!");
-                res.send(201, "Everything went alright");
-            }
-            db.close();
-        });
+                        } else {
+                            console.log("venta de cerveza realizada!");
+                            dbo.collection("inventario").updateOne(
+                                {
+                                    "type": "cerveza"
+                                },
+                                {
+                                    $inc: {
+                                        "cantidad": -req.body.cantidad
+                                    }
+                                },
+                                {
+                                    upsert: true,
+                                }, function (err, resp) {
+                                    if (err) {
+                                        res.send(500, err);
+                                        return;
+
+                                    } else {
+                                        console.log("Inventario actualizado");
+                                        res.send(201, "Everything went alright");
+                                    }
+                                    db.close();
+                                });
+                        }
+                        db.close();
+                    });
+                }
+            });
     });
 });
 
@@ -247,18 +286,24 @@ app.post('/registrar_venta_helado', function (req, res) {
         if (err) return console.log(err);
         var dbo = db.db("heladosdb");
         req.body.type = "helado";
+        if (req.body.precio_venta >= precioVentaHeladoGrande) {
+            req.body.categoria = "Grande";
+        } else {
+            req.body.categoria = "Pequeño";
+        }
         var validQty = dbo.collection('inventario').findOne(
             {
                 "sabor": req.body.sabor,
-                "cantidad": { $gte: req.body.cantidad }
+                "type": "helado",
+                "cantidad": { $gte: req.body.cantidad },
+                "categoria": req.body.categoria
             }, function (err, prod) {
-                console.log(err, prod);
                 if (prod == null) {
                     db.close();
                     res.send(203, "No hay tal cantidad en inventarios");
                     return;
                 } else {
-                    //Registrar la venta
+                    //Modificar inventario
                     dbo.collection("ventas").insertOne(req.body, function (err, resp) {
                         if (err) {
                             res.send(500, err);
@@ -269,6 +314,7 @@ app.post('/registrar_venta_helado', function (req, res) {
                             dbo.collection("inventario").updateOne(
                                 {
                                     "sabor": req.body.sabor,
+                                    "categoria": req.body.categoria,
                                     "type": "helado"
                                 },
                                 {

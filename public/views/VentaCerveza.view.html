@@ -1,0 +1,75 @@
+<div class="row well">
+    <div class="col-md-12">
+        <div class=" text text-info pull-left btn-block" style="font-family: Georgia, serif">
+            <h2>Venta De Cerveza</h2>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text text-danger col-md-6">
+                <h1 class="display-1 text-center">Cantidad</h1>
+                <div class="input-group" ng-class="(vm.submit && cantidad.$error.required) ? 'has-error' : ''">
+                    <span class="input-group-addon">
+                        <i class="fa fa-calculator"></i>
+                    </span>
+                    <input id="cantidad" type="number" class="form-control" name="cantidad" placeholder="Cantidad" ng-model="vm.venta.cantidad"
+                        required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="text text-success col-md-6">
+                    <h1 class="display-1 text-center">Precio por unidad</h1>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-dollar-sign"></i>
+                        </span>
+                        <!-- Select2 aquí -->
+                        <input id="Precio" type="number" class="form-control" name="Precio" placeholder="Precio unitario" ng-model="vm.venta.precio_venta">
+                    </div>
+                </div>
+                <div class="text text-danger col-md-6">
+                    <h1 class="display-1 text-center">Clientes
+                    </h1>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-beer"></i>
+                        </span>
+                        <ui-select multiple ng-model="vm.selected.cliente" theme="bootstrap" close-on-select="false">
+                            <ui-select-match placeholder="Seleccione los clientes...">{{$item.cliente}}</ui-select-match>
+                            <ui-select-choices repeat="color in vm.clientes | filter:$select.search">
+                                {{color.cliente}}
+                            </ui-select-choices>
+                        </ui-select>
+                        <!-- <p>Selected: {{vm.selected.cliente.cliente}}</p> -->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="text text-warning col-md-6 text-center">
+                    <h1 class="display-1 text-center">
+                        <br> Añadir cliente</h1>
+                    <button ng-click="vm.agregarCliente()" class="btn btn-block btn-warning btn-lg">
+                        <span>
+                            <i class="fa fa-save"></i>
+                        </span>
+                    </button>
+                </div>
+                <div class="text text-info col-md-6 text-center">
+                    <h1 class="display-1 text-center">
+                        <br> Registrar Venta</h1>
+                    <button ng-click="vm.RegistrarVenta('cerveza'); vm.submit = true" class="btn btn-block btn-info btn-lg">
+                        <span>
+                            <i class="fa fa-money-bill-alt"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

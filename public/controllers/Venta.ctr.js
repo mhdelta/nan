@@ -79,7 +79,7 @@ function VentaController($scope, $http, $q) {
                                 swal('Bien..!', 'Los datos se guardaron satisfactoriamente!', 'success');
                                 vm.clean();
                             } else if (response.status == 203) {
-                                swal('Oops...', 'No existe tal cantidad en el inventario. \n Existencias insuficientes', 'error');                                
+                                swal('Oops...', 'No existe tal cantidad en el inventario. \n Existencias insuficientes', 'error');
                             } else {
                                 swal('Oops...', 'No se guardaron los datos!', 'error');
                             }
@@ -90,13 +90,19 @@ function VentaController($scope, $http, $q) {
                     break;
 
                 case "cerveza":
-                    delete vm.compra.sabor;
+                    vm.venta.cliente = vm.selected.cliente;
+                    var listaClientes = vm.selected.cliente.map(a => a.cliente);
+                    vm.venta.cliente = listaClientes;
+                    vm.venta.type = "cerveza";
                     vm.RegistrarVentaCervezaBD(vm.venta)
                         .then(function (response) {
                             if (response.status == 201) {
                                 swal('Bien..!', 'Los datos se guardaron satisfactoriamente!', 'success');
                                 vm.clean();
-                            } else {
+                            } else if (response.status == 203) {
+                                swal('Oops...', 'No existe tal cantidad en el inventario. \n Existencias insuficientes', 'error');
+                            }
+                            else {
                                 swal('Oops...', 'No se guardaron los datos!', 'error');
                             }
                         })
