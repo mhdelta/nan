@@ -4,6 +4,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 var functions = require('./public/functions')
+var spawn = require("child_process").spawn;
 
 var cloud = true;
 var mongodbDatabase = 'heladosdb';
@@ -371,17 +372,14 @@ function toTitleCase(str) {
 
 // Response in root
 app.get('/', function (req, res) {
-//     res.sendfile('./index.html'); // load the single view file (angular will handle the page changes on the front-end)
+    res.sendfile('./index.html'); // load the single view file (angular will handle the page changes on the front-end)
     //Run python file
-    const { spawn } = require('child_process');
-    const pyProg = spawn('python',['./public/MachineLearning.hello.py']);
-    
-    pyProg.stdout.on('data', function(data) {
-        console.log(data);
-        console.log(data.toString());
-        res.write(data);
-        res.end('end');
-    });
+    var pythonProcess = spawn('python', ["./public/MachineLearning/hello.py"]);
+    // pythonProcess.stdout.on('data', function (data) {
+    //     // Do something with the data returned from python script
+    //     console.log(data.toString());        
+    // });
+    //python file must loook like print("hello world")\n sys.stdout.flush()
 });
 
 
