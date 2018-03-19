@@ -3,7 +3,7 @@ var assert = require('assert');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
-var functions = require('./public/functions')
+var functions = require('./public/functions');
 var spawn = require("child_process").spawn;
 
 var cloud = true;
@@ -15,6 +15,27 @@ app.use(bodyParser.json());
 
 precioCompraHeladoGrande = 1500;
 precioVentaHeladoGrande = 2500;
+
+// Http method: POST
+// URI        : /traer_inventario
+// Inicializa los valores del ui-select
+app.post('/traer_inventario', function (req, res) {
+    "use strict";
+    MongoClient.connect(url, function (err, db) {
+        if (err) return console.log(err);
+        var dbo = db.db("heladosdb");
+        dbo.collection("inventario").find().toArray(function (err, resp) {
+            if (err) {
+                res.send(500, err);
+                return;
+            } else {
+                console.log("Traer inventario");
+                res.send(201, resp);
+            }
+            db.close();
+        });
+    });
+});
 
 // Http method: POST
 // URI        : /inicializar_sabores

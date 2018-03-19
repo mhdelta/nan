@@ -29,7 +29,10 @@
                             <i class="fa fa-dollar-sign"></i>
                         </span>
                         <!-- Select2 aquí -->
-                        <input id="Precio" type="number" class="form-control" name="Precio" placeholder="Precio unitario" ng-model="vm.venta.precio_venta">
+                        <select class="form-control" ng-model="vm.venta.precio_venta" class="btn btn-block">
+                            <option value="" disabled selected class="text text-muted">Precio de venta unitario</option>
+                            <option value="3000">3000</option>
+                        </select>
                     </div>
                 </div>
                 <div class="text text-danger col-md-6">
