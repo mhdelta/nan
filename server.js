@@ -3,6 +3,7 @@ var assert = require('assert');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
+var functions = require('./public/functions')
 
 var cloud = true;
 var mongodbDatabase = 'heladosdb';
@@ -370,8 +371,20 @@ function toTitleCase(str) {
 
 // Response in root
 app.get('/', function (req, res) {
-    res.sendfile('./index.html'); // load the single view file (angular will handle the page changes on the front-end)
+//     res.sendfile('./index.html'); // load the single view file (angular will handle the page changes on the front-end)
+    //Run python file
+    const { spawn } = require('child_process');
+    const pyProg = spawn('python',['./public/MachineLearning.hello.py']);
+    
+    pyProg.stdout.on('data', function(data) {
+        console.log(data);
+        console.log(data.toString());
+        res.write(data);
+        res.end('end');
+    });
 });
+
+
 
 app.use('/public', express.static('public'));
 app.use('/assets', express.static('assets'));
