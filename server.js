@@ -38,6 +38,27 @@ app.post('/traer_inventario', function (req, res) {
 });
 
 // Http method: POST
+// URI        : /traer_ventas
+// Inicializa los valores del ui-select
+app.post('/traer_ventas', function (req, res) {
+    "use strict";
+    MongoClient.connect(url, function (err, db) {
+        if (err) return console.log(err);
+        var dbo = db.db("heladosdb");
+        dbo.collection("ventas").find().toArray(function (err, resp) {
+            if (err) {
+                res.send(500, err);
+                return;
+            } else {
+                console.log("Traer ventas");
+                res.send(201, resp);
+            }
+            db.close();
+        });
+    });
+});
+
+// Http method: POST
 // URI        : /inicializar_sabores
 // Inicializa los valores del ui-select
 app.post('/inicializar_sabores', function (req, res) {

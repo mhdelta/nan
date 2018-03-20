@@ -307,8 +307,7 @@ function VentaController($scope, $http, $q) {
         vm.venta.sabor = null;
         vm.venta.precio_venta = null;
         vm.venta.fecha_venta = null;
-        vm.selected = null;
-        vm.selected2 = null;
+        // vm.selected.sabor = null;
     }
 }
 
