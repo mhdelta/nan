@@ -42,15 +42,23 @@ app.post('/traer_inventario', function (req, res) {
 // Inicializa los valores del ui-select
 app.post('/traer_ventas', function (req, res) {
     "use strict";
+    var totalVentas = 0;     
     MongoClient.connect(url, function (err, db) {
         if (err) return console.log(err);
         var dbo = db.db("heladosdb");
-        dbo.collection("ventas").find().toArray(function (err, resp) {
+        dbo.collection("ventas").find().forEach(element => {
+            // console.log(element);
+            totalVentas += element.precio_venta * element.cantidad;            
+        });
+        dbo.collection('ventas').find().toArray(function (err, resp) {
             if (err) {
                 res.send(500, err);
                 return;
             } else {
                 console.log("Traer ventas");
+                resp.push(totalVentas); // El ultimo dato en la lista de respuesta es el total de las cerveas vendidas
+                // el proceso se ejecuta en el back porque en el front tardaríka mucho mas (aunque para estas cantidades
+                // de datos la diferencia es minima)
                 res.send(201, resp);
             }
             db.close();
@@ -283,6 +291,8 @@ app.post('/registrar_venta_cerveza', function (req, res) {
                     res.send(203, "No hay tal cantidad en inventarios");
                     return;
                 } else {
+                    console.log(prod);
+
                     //Modificar inventario
                     dbo.collection("ventas").insertOne(req.body, function (err, resp) {
                         if (err) {
@@ -293,7 +303,8 @@ app.post('/registrar_venta_cerveza', function (req, res) {
                             console.log("venta de cerveza realizada!");
                             dbo.collection("inventario").updateOne(
                                 {
-                                    "type": "cerveza"
+                                    "type": "cerveza",
+                                    "precio": prod.precio
                                 },
                                 {
                                     $inc: {
@@ -416,7 +427,7 @@ function toTitleCase(str) {
 app.get('/', function (req, res) {
     res.sendfile('./index.html'); // load the single view file (angular will handle the page changes on the front-end)
     //Run python file
-    var pythonProcess = spawn('python', ["./public/MachineLearning/hello.py"]);
+    // var pythonProcess = spawn('python', ["./public/MachineLearning/hello.py"]);
     // pythonProcess.stdout.on('data', function (data) {
     //     // Do something with the data returned from python script
     //     console.log(data.toString());        
@@ -430,7 +441,7 @@ app.use('/public', express.static('public'));
 app.use('/assets', express.static('assets'));
 app.use('/node_modules', express.static('node_modules'));
 
-var server = app.listen(8000, "0.0.0.0", function () {
+var server = app.listen(3000, "0.0.0.0", function () {
     "use strict";
 
     var host = server.address().address,
