@@ -139,6 +139,8 @@ function ConsultasController($scope, $http, $q) {
                     if (response.status == 201) {
                         console.log("Se inicializó el inventario");
                         response.data.forEach(function (elm) {
+                            // console.log(elm);
+                            
                             if (elm.sabor != null) {
                                 var saborCategoria = elm.sabor + ' ' + elm.categoria;
                                 vm.labelsHelados.push(saborCategoria);

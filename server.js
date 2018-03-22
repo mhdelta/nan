@@ -42,13 +42,21 @@ app.post('/traer_inventario', function (req, res) {
 // Inicializa los valores del ui-select
 app.post('/traer_ventas', function (req, res) {
     "use strict";
-    var totalVentas = 0;     
+    var totalVentas = 0;
+    var mes;
+    var meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    function VentaMensual(mes, total){
+        this.mes = mes;
+        this.total = total;
+    }
     MongoClient.connect(url, function (err, db) {
         if (err) return console.log(err);
         var dbo = db.db("heladosdb");
         dbo.collection("ventas").find().forEach(element => {
             // console.log(element);
-            totalVentas += element.precio_venta * element.cantidad;            
+            totalVentas += element.precio_venta * element.cantidad;
+            var arr_mes = element.fecha_venta.split("/"); // dd/mm/yy    
+
         });
         dbo.collection('ventas').find().toArray(function (err, resp) {
             if (err) {
@@ -56,7 +64,7 @@ app.post('/traer_ventas', function (req, res) {
                 return;
             } else {
                 console.log("Traer ventas");
-                resp.push(totalVentas); // El ultimo dato en la lista de respuesta es el total de las cerveas vendidas
+                resp[resp.length - 1] = totalVentas; // El ultimo dato en la lista de respuesta es el total de las cerveas vendidas
                 // el proceso se ejecuta en el back porque en el front tardaríka mucho mas (aunque para estas cantidades
                 // de datos la diferencia es minima)
                 res.send(201, resp);
