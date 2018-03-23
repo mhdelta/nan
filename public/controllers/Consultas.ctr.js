@@ -17,6 +17,9 @@ function ConsultasController($scope, $http, $q) {
     vm.valorCostoHelados = 0;
     vm.valorCostoCerveza = 0;
 
+    vm.datosCantProds = [];
+    vm.labelCantProds = [];
+
 
     //Métodos
     vm.traerVentas = TraerVentas;
@@ -26,6 +29,7 @@ function ConsultasController($scope, $http, $q) {
     vm.traerInventarioServ = TraerInventarioServ;
 
     vm.cargarTablasInv = CargarTablasInv;
+    vm.cargarTablasVentas = CargarTablasVentas;
 
     vm.inictr = Inictr;
     vm.inictr();
@@ -132,6 +136,39 @@ function ConsultasController($scope, $http, $q) {
         });
     }
 
+    function CargarTablasVentas() {
+        vm.ctp = document.getElementById("chartProdMas");
+
+        vm.helados = new Chart(vm.ctp, {
+            type: 'bar',
+            data: {
+                labels: vm.labelCantProds,
+                datasets: [{
+                    label: 'Producto más vendido / Menos vendido',
+                    data: vm.datosCantProds,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    }
+
     function TraerInventario() {
         try {
             vm.traerInventarioServ()
@@ -140,7 +177,7 @@ function ConsultasController($scope, $http, $q) {
                         console.log("Se inicializó el inventario");
                         response.data.forEach(function (elm) {
                             // console.log(elm);
-                            
+
                             if (elm.sabor != null) {
                                 var saborCategoria = elm.sabor + ' ' + elm.categoria;
                                 vm.labelsHelados.push(saborCategoria);
@@ -150,7 +187,6 @@ function ConsultasController($scope, $http, $q) {
                                 vm.preciosCerveza.push('$' + elm.precio.toString());
                                 vm.datosCerveza.push(elm.cantidad);
                                 vm.valorCostoCerveza += elm.cantidad * elm.precio;
-                                
                             }
                         });
                         vm.valorCostoHelados = (vm.valorCostoHelados + "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
@@ -180,15 +216,19 @@ function ConsultasController($scope, $http, $q) {
 
     function TraerVentas() {
         try {
+            var prod;
+            var prodMen;
             vm.traerVentasServ()
                 .then(function (response) {
                     if (response.status == 201) {
+                        prod = response.data[response.data.length - 2];
+                        prodMen = response.data[response.data.length - 1];
+                        vm.labelCantProds.push(prod._id.sabor + ' ' + prod._id.tamano);
+                        vm.labelCantProds.push(prodMen._id.sabor + ' ' + prodMen._id.tamano);
                         console.log("Se trajeron las ventas");
-                        response.data.forEach(function (elm) {
-                            vm.datosVentas.push(elm);
-                        });
-                        console.log(vm.datosVentas);
-                        vm.cargarTablasInv();
+                        vm.datosCantProds.push(prod.cantidad_vendida);
+                        vm.datosCantProds.push(prodMen.cantidad_vendida);
+                        vm.cargarTablasVentas();
                     } else {
                         swal('Oops...', 'No se pudieron traer los datos de las ventas!', 'error');
                     }

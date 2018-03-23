@@ -43,20 +43,32 @@ app.post('/traer_inventario', function (req, res) {
 app.post('/traer_ventas', function (req, res) {
     "use strict";
     var totalVentas = 0;
-    var mes;
-    var meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-    function VentaMensual(mes, total){
-        this.mes = mes;
-        this.total = total;
-    }
+    var arr_cant = [];
+    var arr_sabor = [];
+
     MongoClient.connect(url, function (err, db) {
         if (err) return console.log(err);
         var dbo = db.db("heladosdb");
-        dbo.collection("ventas").find().forEach(element => {
-            // console.log(element);
-            totalVentas += element.precio_venta * element.cantidad;
-            var arr_mes = element.fecha_venta.split("/"); // dd/mm/yy    
-
+        
+        var helado_mas_vendido;
+        var helado_menos_vendido;
+        dbo.collection("ventas").aggregate([
+            { $match: { categoria: { $exists: true } } },
+            {
+                $group:
+                    {
+                        _id: {
+                            'sabor': '$sabor',
+                            'tamano': '$categoria',
+                        },
+                        cantidad_vendida: {$sum: '$cantidad'}
+                    }
+            },
+            {$sort: {cantidad_vendida: -1}}
+        ]).toArray(function (err, docs) {
+            console.log(err);
+            helado_mas_vendido = docs[0];
+            helado_menos_vendido = docs[docs.length-1];
         });
         dbo.collection('ventas').find().toArray(function (err, resp) {
             if (err) {
@@ -64,9 +76,8 @@ app.post('/traer_ventas', function (req, res) {
                 return;
             } else {
                 console.log("Traer ventas");
-                resp[resp.length - 1] = totalVentas; // El ultimo dato en la lista de respuesta es el total de las cerveas vendidas
-                // el proceso se ejecuta en el back porque en el front tardaríka mucho mas (aunque para estas cantidades
-                // de datos la diferencia es minima)
+                resp.push(helado_mas_vendido);
+                resp.push(helado_menos_vendido);
                 res.send(201, resp);
             }
             db.close();
@@ -288,7 +299,6 @@ app.post('/registrar_venta_cerveza', function (req, res) {
         if (err) return console.log(err);
         var dbo = db.db("heladosdb");
         req.body.type = "cerveza";
-        console.log(req.body);
         var validQty = dbo.collection('inventario').findOne(
             {
                 "type": "cerveza",
