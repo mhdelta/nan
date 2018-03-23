@@ -65,7 +65,7 @@ function VentaController($scope, $http, $q) {
         try {
             // La fecha debe de ser formateada para que el SQL la entienda
             var d = new Date();
-            vm.venta.fecha_venta = d.getDate().toString() + "/" + d.getMonth().toString() + "/" + d.getFullYear().toString();
+            vm.venta.fecha_venta = (d.getMonth()+1).toString() + "/" + d.getDate().toString() + "/" + d.getFullYear().toString();
             vm.venta.precio_venta = parseInt(vm.venta.precio_venta);
             switch (producto) {
                 case "helado":

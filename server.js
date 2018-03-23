@@ -69,16 +69,55 @@ app.post('/traer_ventas', function (req, res) {
             console.log(err);
             helado_mas_vendido = docs[0];
             helado_menos_vendido = docs[docs.length-1];
-        });
-        dbo.collection('ventas').find().toArray(function (err, resp) {
             if (err) {
                 res.send(500, err);
                 return;
             } else {
-                console.log("Traer ventas");
+                console.log("Traer ventas, prod mas vendido");
+                var resp = [];
                 resp.push(helado_mas_vendido);
                 resp.push(helado_menos_vendido);
                 res.send(201, resp);
+            }
+            db.close();
+        });
+    });
+});
+
+// Http method: POST
+// URI        : /traer_ventas
+// Inicializa los valores del ui-select
+app.post('/traer_ventas_mensuales', function (req, res) {
+    "use strict";
+    var totalVentas = 0;
+    var arr_cant = [];
+    var arr_sabor = [];
+
+    MongoClient.connect(url, function (err, db) {
+        if (err) return console.log(err);
+        var dbo = db.db("heladosdb");
+        
+        
+        dbo.collection("ventas").aggregate([
+            { $match: { categoria: { $exists: true } } },
+            {$sort: {fecha_venta: -1}},
+            {
+                $group:
+                    {
+                        _id: {
+                            'fecha': '$fecha_venta'
+                        },
+                        total_vendido: {$sum: {$multiply: ['$cantidad', '$precio_venta']}}
+                    }
+            }
+        ]).toArray(function (err, docs) {
+            console.log(err);
+            if (err) {
+                res.send(500, err);
+                return;
+            } else {
+                console.log("Ventas mensuales enviadas");
+                res.send(201, docs);
             }
             db.close();
         });

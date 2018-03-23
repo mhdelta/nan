@@ -23,14 +23,12 @@ function ConsultasController($scope, $http, $q) {
 
     //Métodos
     vm.traerVentas = TraerVentas;
-    vm.traerVentasServ = TraerVentasServ;
 
     vm.traerInventario = TraerInventario;
-    vm.traerInventarioServ = TraerInventarioServ;
 
     vm.cargarTablasInv = CargarTablasInv;
     vm.cargarTablasVentas = CargarTablasVentas;
-
+    vm.cargarTablasVentasMensuales = CargarTablasVentasMensuales;
     vm.inictr = Inictr;
     vm.inictr();
 
@@ -169,9 +167,59 @@ function ConsultasController($scope, $http, $q) {
         });
     }
 
+    function CargarTablasVentasMensuales() {
+        vm.ctm = document.getElementById("chartProdMensual");
+        vm.helados = new Chart(vm.ctm, {
+            type: 'bar',
+            data: {
+                labels: vm.fechaVentaMensual,
+                datasets: [{
+                    label: 'Total vendido',
+                    data: vm.totalVentaMensual,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    }
+
     function TraerInventario() {
         try {
-            vm.traerInventarioServ()
+            ConsumeServicePromise($q, $http, "/traer_inventario")
                 .then(function (response) {
                     if (response.status == 201) {
                         console.log("Se inicializó el inventario");
@@ -189,6 +237,8 @@ function ConsultasController($scope, $http, $q) {
                                 vm.valorCostoCerveza += elm.cantidad * elm.precio;
                             }
                         });
+                        vm.costoInventario = vm.valorCostoCerveza + vm.valorCostoHelados;
+                        vm.costoInventario = (vm.costoInventario + "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");                        
                         vm.valorCostoHelados = (vm.valorCostoHelados + "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
                         vm.valorCostoCerveza = (vm.valorCostoCerveza + "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
                         vm.cargarTablasInv();
@@ -204,25 +254,15 @@ function ConsultasController($scope, $http, $q) {
         }
     }
 
-    function TraerInventarioServ() {
-        try {
-            return ConsumeServicePromise($q, $http, "/traer_inventario");
-        } catch (error) {
-            console.log(error);
-
-            throw (error, "no es posible traer el inventario");
-        }
-    }
-
     function TraerVentas() {
         try {
             var prod;
             var prodMen;
-            vm.traerVentasServ()
+            ConsumeServicePromise($q, $http, "/traer_ventas")
                 .then(function (response) {
                     if (response.status == 201) {
-                        prod = response.data[response.data.length - 2];
-                        prodMen = response.data[response.data.length - 1];
+                        prod = response.data[0];
+                        prodMen = response.data[1];
                         vm.labelCantProds.push(prod._id.sabor + ' ' + prod._id.tamano);
                         vm.labelCantProds.push(prodMen._id.sabor + ' ' + prodMen._id.tamano);
                         console.log("Se trajeron las ventas");
@@ -236,18 +276,25 @@ function ConsultasController($scope, $http, $q) {
                 .catch(function (error) {
                     console.log(error);
                 });
+            ConsumeServicePromise($q, $http, "/traer_ventas_mensuales")
+                .then(function (response) {
+                    if (response.status == 201) {
+                        vm.fechaVentaMensual = [];
+                        vm.totalVentaMensual = [];
+                        response.data.forEach(function (elm) {
+                            vm.fechaVentaMensual.push(elm._id.fecha);
+                            vm.totalVentaMensual.push(elm.total_vendido);
+                        });
+                        vm.cargarTablasVentasMensuales();
+                    } else {
+                        swal('Oops...', 'No se pudieron traer los datos de las ventas!', 'error');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         } catch (error) {
             console.log(error);
-        }
-    }
-
-    function TraerVentasServ() {
-        try {
-            return ConsumeServicePromise($q, $http, "/traer_ventas");
-        } catch (error) {
-            console.log(error);
-
-            throw (error, "no es posible traer las ventas");
         }
     }
 

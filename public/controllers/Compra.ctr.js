@@ -114,7 +114,7 @@ function CompraController($scope, $http, $q) {
         try {
             // La fecha debe de ser formateada para que el SQL la entienda
             var d = new Date();
-            vm.compra.fecha = d.getDate().toString() + "/" + d.getMonth().toString() + "/" + d.getFullYear().toString();
+            vm.compra.fecha = (d.getMonth()+1).toString() + "/" + d.getDate().toString() + "/" + d.getFullYear().toString();
             vm.compra.precio_unitario = parseInt(vm.compra.precio_unitario);
             vm.tooBig();
             if (!vm.validSize) {
