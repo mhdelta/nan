@@ -28,6 +28,7 @@ function ConsultasController($scope, $http, $q) {
 
     vm.cargarTablasInv = CargarTablasInv;
     vm.cargarTablasVentas = CargarTablasVentas;
+    vm.cargarTablasClientes = CargarTablasClientes;
     vm.cargarTablasVentasMensuales = CargarTablasVentasMensuales;
     vm.inictr = Inictr;
     vm.inictr();
@@ -46,39 +47,25 @@ function ConsultasController($scope, $http, $q) {
         vm.cth = document.getElementById("chartHelados");
 
         vm.helados = new Chart(vm.cth, {
-            type: 'bar',
+            type: 'pie',
             data: {
                 labels: vm.labelsHelados,
                 datasets: [{
                     label: '# de helados',
                     data: vm.datosHelados,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
+                        'rgba(255, 99, 132, 1)',
                         'rgba(54, 162, 235, 1)',
                         'rgba(255, 206, 86, 1)',
                         'rgba(75, 192, 192, 1)',
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
+                        'rgb(18.8%, 70.6%, 7.7%)',
+                        'rgb(64, 39, 190)',
+                        'rgb(90, 98, 13)',
+                        'rgb(214, 20, 194)',
+                        'rgb(216, 20, 49)',
                         'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)'
+                        'rgb(234, 105, 14)'
                     ],
-                    borderWidth: 1
                 }]
             },
             options: {
@@ -95,41 +82,19 @@ function ConsultasController($scope, $http, $q) {
         vm.ctc = document.getElementById("chartCerveza");
 
         vm.cervezas = new Chart(vm.ctc, {
-            type: 'bar',
+            type: 'doughnut',
             data: {
-                labels: vm.preciosCerveza,
                 datasets: [{
                     label: '# de cerveza',
                     data: vm.datosCerveza,
                     backgroundColor: [
-                        'rgba(60,255,132, 0.2)',
-                        'rgba(54, 162, 100, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(60,255,132,1)',
-                        'rgba(54, 162, 100, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }],
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Precio de compra'
-                        }
-                    }]
-                }
+                        'rgb(60,255,132)',
+                        'rgb(54, 162, 100)',
+                        'rgb(255, 206, 86)',
+                        'rgb(75, 192, 192)'
+                    ]
+                }],
+                labels: vm.preciosCerveza,
             }
         });
     }
@@ -140,20 +105,15 @@ function ConsultasController($scope, $http, $q) {
         vm.helados = new Chart(vm.ctp, {
             type: 'bar',
             data: {
-                labels: vm.labelCantProds,
                 datasets: [{
-                    label: 'Producto más vendido / Menos vendido',
+                    label: 'Producto más vendido',
                     data: vm.datosCantProds,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)'
-                    ],
-                    borderWidth: 1
-                }]
+                        'rgb(38, 228, 15)',
+                        'rgb(222, 20, 21)'
+                    ]
+                }],
+                labels: vm.labelCantProds,
             },
             options: {
                 scales: {
@@ -174,43 +134,95 @@ function ConsultasController($scope, $http, $q) {
             data: {
                 labels: vm.fechaVentaMensual,
                 datasets: [{
-                    label: 'Total vendido',
-                    data: vm.totalVentaMensual,
+                    label: 'Total vendido en helados',
+                    data: vm.totalVentaMensualHelados,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)'
-                    ],
-                    borderWidth: 1
-                }]
+                        'rgb(5.9%, 64%, 63.6%)',
+                        'rgb(5.9%, 64%, 63.6%)',
+                        'rgb(5.9%, 64%, 63.6%)',
+                        'rgb(5.9%, 64%, 63.6%)',
+                        'rgb(5.9%, 64%, 63.6%)',
+                        'rgb(5.9%, 64%, 63.6%)',
+                        'rgb(5.9%, 64%, 63.6%)',
+                        'rgb(5.9%, 64%, 63.6%)',
+                        'rgb(5.9%, 64%, 63.6%)'
+                    ]
+                },
+                {
+                    label: 'Total vendido en cervezas',
+                    data: vm.totalVentaMensualCerveza,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 99, 132)',
+                    ]
+                }
+                ]
             },
             options: {
                 scales: {
                     yAxes: [{
                         ticks: {
-                            beginAtZero: true
-                        }
+                            // Include a dollar sign in the ticks
+                            callback: function (value, index, values) {
+                                if (value - 50000 >= 0) {
+                                    value = (value + "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+                                    return '$' + value;
+                                }
+                            }
+                        },
+                        stacked: true
+                    }],
+                    xAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+        });
+    }
+
+    function CargarTablasClientes() {
+        vm.ctclientes = document.getElementById("RankingClientes");
+
+        vm.clientes = new Chart(vm.ctclientes, {
+            type: 'horizontalBar',
+            data: {
+                labels: vm.labelsClientes,
+                datasets: [{
+                    label: 'Total comprado',
+                    data: vm.datosClientes,
+                    backgroundColor: [
+                        'rgb(5.9%, 64%, 63.6%)',
+                        'rgb(8%, 62.8%, 12.5%)',
+                        'rgb(55%, 69.8%, 7.3%)',
+                        'rgb(88.2%, 41.4%, 7.9%)',
+                        'rgb(82.7%, 12.2%, 12.2%)',
+                        'rgb(79.2%, 10.1%, 76.8%)',
+                        'rgb(20.8%, 7.5%, 77.3%)',
+                        'rgb(70.1%, 66.3%, 85.9%)',
+                        'rgb(85.9%, 66.3%, 85.2%)',
+                        'rgb(66.3%, 85.9%, 69.3%)'
+                    ]
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: {},
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            min: 0,
+                            stepSize: 20000,
+                            // Include a dollar sign in the ticks
+                            callback: function (value, index, values) {
+                                value = (value + "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+                                return '$' + value;
+                            }
+                        },
                     }]
                 }
             }
@@ -238,7 +250,7 @@ function ConsultasController($scope, $http, $q) {
                             }
                         });
                         vm.costoInventario = vm.valorCostoCerveza + vm.valorCostoHelados;
-                        vm.costoInventario = (vm.costoInventario + "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");                        
+                        vm.costoInventario = (vm.costoInventario + "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
                         vm.valorCostoHelados = (vm.valorCostoHelados + "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
                         vm.valorCostoCerveza = (vm.valorCostoCerveza + "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
                         vm.cargarTablasInv();
@@ -280,12 +292,36 @@ function ConsultasController($scope, $http, $q) {
                 .then(function (response) {
                     if (response.status == 201) {
                         vm.fechaVentaMensual = [];
-                        vm.totalVentaMensual = [];
+                        vm.totalVentaMensualHelados = [];
+                        vm.totalVentaMensualCerveza = [];
+                        vm.totalVendidoMes = [];
                         response.data.forEach(function (elm) {
                             vm.fechaVentaMensual.push(elm._id.fecha);
-                            vm.totalVentaMensual.push(elm.total_vendido);
+                            vm.totalVendidoMes.push(elm._id.total_vendido);
+                            if (elm._id.type == 'helado') {
+                                vm.totalVentaMensualHelados.push(elm.total_vendido);
+                            } else {
+                                vm.totalVentaMensualCerveza.push(elm.total_vendido);
+                            }
                         });
                         vm.cargarTablasVentasMensuales();
+                    } else {
+                        swal('Oops...', 'No se pudieron traer los datos de las ventas!', 'error');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            ConsumeServicePromise($q, $http, "/traer_clientes")
+                .then(function (response) {
+                    if (response.status == 201) {
+                        vm.labelsClientes = [];
+                        vm.datosClientes = [];
+                        response.data.forEach(function (elm) {
+                            vm.labelsClientes.push(elm._id);
+                            vm.datosClientes.push(elm.total_comprado);
+                        });
+                        vm.cargarTablasClientes();
                     } else {
                         swal('Oops...', 'No se pudieron traer los datos de las ventas!', 'error');
                     }
