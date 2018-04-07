@@ -15,6 +15,7 @@
     "body-parser": "^1.18.2",
     "chart.js": "^2.7.2",
     "express": "^4.16.2",
+    "mongo-to-csv": "^1.0.1",
     "mongodb": "^3.0.4",
     "oracledb": "^2.0.15",
     "sweetalert2": "^7.12.12"

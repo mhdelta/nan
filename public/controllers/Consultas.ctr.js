@@ -193,7 +193,7 @@ function ConsultasController($scope, $http, $q) {
             data: {
                 labels: vm.labelsClientes,
                 datasets: [{
-                    label: 'Total comprado',
+                    label: 'Total comprado $',
                     data: vm.datosClientes,
                     backgroundColor: [
                         'rgb(5.9%, 64%, 63.6%)',

@@ -12,6 +12,7 @@ function PrediccionesController($scope, $http, $q) {
   vm.traerClientes = TraerClientes;
   vm.inicializarClientes = InicializarClientes;
   vm.predecir = Predecir;
+  vm.cargarTablasPredicciones = CargarTablasPredicciones;
 
   vm.inictr = Inictr;
   vm.inictr();
@@ -45,6 +46,13 @@ function PrediccionesController($scope, $http, $q) {
         ConsumeServicePromise($q, $http, "/predicciones", data)
           .then(function(response) {
             if (response.status == 201) {
+			  vm.labelsSabores = [];
+			  vm.prediccion = [];
+              response.data.forEach(function(elm) {
+                vm.labelsSabores.push(elm._id.sabor + " " + elm._id.tamano);
+                vm.prediccion.push(elm.promedio_vendido);
+              });
+              vm.cargarTablasPredicciones();
             } else {
             }
           })
@@ -52,8 +60,8 @@ function PrediccionesController($scope, $http, $q) {
             console.log(error);
           });
       } catch (error) {
-		  console.log(error);
-	  }
+        console.log(error);
+      }
     }
   }
 
@@ -124,4 +132,47 @@ function PrediccionesController($scope, $http, $q) {
       console.log(error);
     }
   }
+
+  function CargarTablasPredicciones () {
+	  try {
+		vm.ctp = document.getElementById("chartPred");
+        vm.pred = new Chart(vm.ctp, {
+            type: 'bar',
+            data: {
+                labels: vm.labelsSabores,
+                datasets: [{
+                    label: "Cantidad probable de helados a ser vendida ",
+                    data: vm.prediccion,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgb(18.8%, 70.6%, 7.7%)',
+                        'rgb(64, 39, 190)',
+                        'rgb(90, 98, 13)',
+                        'rgb(214, 20, 194)',
+                        'rgb(216, 20, 49)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgb(234, 105, 14)'
+                    ]
+                }
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+	  } catch (error) {
+		  console.log(error);
+	  }
+  }
+
+
 }
