@@ -28,7 +28,6 @@
                         <span class="input-group-addon">
                             <i class="fa fa-dollar-sign"></i>
                         </span>
-                        <!-- Select2 aquí -->
                         <select class="form-control" ng-model="vm.venta.precio_venta" class="btn btn-block">
                             <option value="" disabled selected class="text text-muted">Precio de venta unitario</option>
                             <option value="3000">3000</option>
@@ -42,7 +41,7 @@
                         <span class="input-group-addon">
                             <i class="fa fa-beer"></i>
                         </span>
-                        <ui-select multiple ng-model="vm.selected.cliente" theme="bootstrap" close-on-select="false">
+                        <ui-select limit = "2" multiple ng-model="vm.selected.cliente" theme="bootstrap" close-on-select="false">
                             <ui-select-match placeholder="Seleccione los clientes...">{{$item.cliente}}</ui-select-match>
                             <ui-select-choices repeat="color in vm.clientes | filter:$select.search">
                                 {{color.cliente}}

@@ -47,6 +47,11 @@ function configApp($routeProvider) {
             controllerAs: "vm",
             controller: "ConsultasController",
             templateUrl: "/public/views/Consultas.view.html"
+		})
+		.when("/predicciones", {
+            controllerAs: "vm",
+            controller: "PrediccionesController",
+            templateUrl: "/public/views/Predicciones.view.html"
         })
         //other whens removed
         .otherwise({

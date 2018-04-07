@@ -16,7 +16,6 @@ function MainController($scope){
      */
     function IniCtr() {
         try {
-            console.log("hellllo");
         } catch (error) {
             console.log(error);
         }

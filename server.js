@@ -3,7 +3,6 @@ var assert = require('assert');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
-var functions = require('./public/functions');
 var spawn = require("child_process").spawn;
 
 var cloud = true;
@@ -153,7 +152,7 @@ app.post('/traer_clientes', function (req, res) {
                 res.send(500, err);
                 return;
             } else {
-                console.log("Clientes enviados");
+                console.log("Clientes enviados");                
                 res.send(201, docs);
             }
             db.close();
@@ -491,6 +490,65 @@ app.post('/registrar_venta_helado', function (req, res) {
             });
     });
 });
+
+// Http method: POST
+// URI        : /predicciones
+// Realiza la prediccion para ventas de dos clientes
+app.post('/predicciones', function (req, res) {
+	"use strict";
+	
+	// En ese arreglo van los dos clientes que hay que investigar
+	var cliente0 = req.body[0];
+	var cliente1 = req.body[1];
+
+	console.log("Cliente #0: ", cliente0);
+	console.log("Cliente #1: ", cliente1);
+	
+
+
+	// Lo que hay que hacer es:
+	// Recibir los dos equipos, realizar busquedas con sus nombres
+	// en los documentos de ventas, promediar sus ventas, agrupados por sabores y {precio o tamano}
+	// Luego promediar las respuestas de los dos equipos y emitir un resultado
+
+
+
+    MongoClient.connect(url, function (err, db) {
+        if (err) return console.log(err);
+        var dbo = db.db("heladosdb");
+		var ventas = dbo.collection("ventas");
+		console.log("Accediendo al módulo de predicciones");
+        ventas.aggregate([
+			{ $match: { categoria: { $exists: true } } },
+			{ $unwind : "$cliente" },
+            {
+                $group:
+                    {
+                        _id: {
+							'cliente': cliente1,
+                            'sabor': '$sabor',
+							'tamano': '$categoria',
+                        },
+                        promedio_vendido: { $avg: '$cantidad'}
+                    }
+			},
+            { $sort: { promedio_vendido: -1 } }
+        ]).toArray(function (err, docs) {
+			console.log(err);
+			console.log(docs);
+            // if (err) {
+            //     res.send(500, err);
+            //     return;
+            // } else {
+            //     console.log("Traer ventas, prod mas vendido");
+            //     var resp = [];
+            //     res.send(201, resp);
+            // }
+            db.close();
+        });
+    });
+});
+
 /**
  * @description Función que verifica que el elemento que reciba sea un Json
  * @author Miguel Ángel Henao Pérez
@@ -527,6 +585,12 @@ app.get('/', function (req, res) {
     //     console.log(data.toString());        
     // });
     //python file must loook like print("hello world")\n sys.stdout.flush()
+
+    const Ejemplo = require('./public/functions.js');
+    let ejemplo = new Ejemplo();
+    
+    
+
 });
 
 
