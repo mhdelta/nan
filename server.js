@@ -617,17 +617,8 @@ function toTitleCase(str) {
 
 // Response in root
 app.get("/", function(req, res) {
-  res.sendfile("./index.html"); // load the single view file (angular will handle the page changes on the front-end)
-  //Run python file
-  // var pythonProcess = spawn('python', ["./public/MachineLearning/hello.py"]);
-  // pythonProcess.stdout.on('data', function (data) {
-  //     // Do something with the data returned from python script
-  //     console.log(data.toString());
-  // });
-  //python file must loook like print("hello world")\n sys.stdout.flush()
+  res.sendfile("./index.html");
 
-  const Ejemplo = require("./public/functions.js");
-  let ejemplo = new Ejemplo();
 });
 
 app.use("/public", express.static("public"));
