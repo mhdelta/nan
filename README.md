@@ -20,7 +20,7 @@ Lecter utiliza algunas dependecias para funcionar correctamente:
 * [Twitter Bootstrap] - CSS precompilado para páginas web.
 * [node.js] - Entorno de ejecución por eventos construido en JavaScript para el backend.
 * [Express] - Framework de nodejs para el manejo de peticiones.
-* [MongoDB] - Base de datos no relacional orientada en documentos.
+* [MongoDB] - Base de datos no relacional basada en documentos.
 * [Chart.js] - Tablas y visualización de datos en JavaScript.
 
 ### Installation
@@ -38,11 +38,11 @@ $ npm install
 $ node server.js
 ```
 
-Posteriormente ingrese un numero de puerto (por ejemplo 5000) y diríjase al localgost:5000 en su navegador favorito.
+Posteriormente ingrese un numero de puerto (por ejemplo 5000) y diríjase al localhost:5000 en su navegador favorito.
 
 ### Sobre el autor
 
-Mi nombre es Miguel Ángel Henao y soy un estudiante de ingerniería de sistemas en la Universidad Tecnológica de Pereira.
+Mi nombre es Miguel Ángel Henao y soy un estudiante de ingeniería de sistemas en la Universidad Tecnológica de Pereira.
 Disfruto mucho programar y aprender todos los días algo nuevo, seguir mejorando es mi meta!
 
 Actualmente estoy desarrollando aplicaciones web para [Geminus Software](http://www.geminus.com.co/) y puedes contactarme por esta cuenta de GitHub o a mi correo [miguelangelutp@gmail.com]
