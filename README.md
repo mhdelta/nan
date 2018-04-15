@@ -45,5 +45,5 @@ Posteriormente ingrese un numero de puerto (por ejemplo 5000) y diríjase al loc
 Mi nombre es Miguel Ángel Henao y soy un estudiante de ingeniería de sistemas en la Universidad Tecnológica de Pereira.
 Disfruto mucho programar y aprender todos los días algo nuevo, seguir mejorando es mi meta!
 
-Actualmente estoy desarrollando aplicaciones web para [Geminus Software](http://www.geminus.com.co/) y puedes contactarme por esta cuenta de GitHub o a mi correo [miguelangelutp@gmail.com]
+Actualmente estoy desarrollando aplicaciones web para [Geminus Software](http://www.geminus.com.co/) y puedes contactarme por esta cuenta de GitHub o a mi correo miguelangelutp@gmail.com
 
