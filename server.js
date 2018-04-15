@@ -625,11 +625,24 @@ app.use("/public", express.static("public"));
 app.use("/assets", express.static("assets"));
 app.use("/node_modules", express.static("node_modules"));
 
-var server = app.listen(3000, "0.0.0.0", function() {
+const readline = require('readline');
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+rl.question('Porfavor ingrese un puerto que no esté en uso. Ejemplo: 5000 \n', (answer) => {
+  // TODO: Log the answer in a database
+  puerto = answer;
+	var server = app.listen(puerto, "0.0.0.0", function(err) {
   "use strict";
 
   var host = server.address().address,
     port = server.address().port;
 
   console.log(" Server is listening at http://%s:%s", host, port);
+});
+
+  rl.close();
 });
