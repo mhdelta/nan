@@ -1,0 +1,1 @@
+Los campos identificados con "No field" corresponden a ventas o compras de cerveza, la cerveza solo maneja un sabor y por tanto es más fácil identificarla de esta manera.
