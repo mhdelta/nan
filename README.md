@@ -31,6 +31,11 @@ Instale node, y a través del manejador de paquetes npm instale las dependencias
 
 Procure inicialmente cambiar la versión de node con [NVM](https://github.com/creationix/nvm) 
 
+Puede instalar facilmente nvm usando el comando: 
+```sh
+$ wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.9/install.sh | bash
+```
+
 ```sh
 $ cd usersApp
 $ nvm install node 8.9.4
