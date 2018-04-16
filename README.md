@@ -35,6 +35,7 @@ Puede instalar facilmente nvm usando el comando:
 ```sh
 $ wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.9/install.sh | bash
 ```
+Posteriormente ejecute lo siguiente:
 
 ```sh
 $ cd usersApp
