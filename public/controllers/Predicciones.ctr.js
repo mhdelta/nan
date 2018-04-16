@@ -3,21 +3,26 @@ app = angular.module("LecterApp");
 app.controller("PrediccionesController", PrediccionesController);
 function PrediccionesController($scope, $http, $q) {
   var vm = this;
-
+//=================================================================
   //Variables
   vm.clientes;
   vm.selected;
+//=================================================================
   //Métodos
-
   vm.traerClientes = TraerClientes;
   vm.inicializarClientes = InicializarClientes;
   vm.predecir = Predecir;
   vm.cargarTablasPredicciones = CargarTablasPredicciones;
-
   vm.inictr = Inictr;
   vm.inictr();
-
-  function Inictr() {
+//=================================================================
+/**
+ * @description Da inicio al controlador, la acción inmediata es 
+ *              Traer los   
+ * @author Miguel Ángel Henao Pérez
+ * @return {void}
+ */
+function Inictr() {
     try {
       vm.inicializarClientes();
 
@@ -173,6 +178,5 @@ function PrediccionesController($scope, $http, $q) {
 		  console.log(error);
 	  }
   }
-
-
 }
+

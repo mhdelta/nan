@@ -6,7 +6,6 @@ function MainController($scope){
     var vm = this;
 
     vm.inictr = IniCtr;
-    vm.guardarCorreo = GuardarCorreo;
 
     vm.inictr();
     /**
@@ -20,11 +19,5 @@ function MainController($scope){
             console.log(error);
         }
     }
-
-    function GuardarCorreo(){
-        console.log(vm.email);
-        console.log("hi");
-        
-    } 
 }
 

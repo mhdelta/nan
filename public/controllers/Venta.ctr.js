@@ -6,8 +6,8 @@ function VentaController($scope, $http, $q) {
         vm = null;
         delete $scope.vm;
     });
-    var vm = this;
-
+	var vm = this;
+	//==============================================
     //Variables
     vm.venta = {
         cantidad: null,
@@ -17,14 +17,11 @@ function VentaController($scope, $http, $q) {
         cliente: null
     };
     vm.submit = false;
-    // En una futura actualización la variable 
-    // vm.sabores se llenará automaticamente con
-    // información proveniente del servidor
     vm.sabores;
     vm.selected;
-
     vm.clientes;
-    vm.selected2;
+	vm.selected2;
+	//==============================================	
     //Métodos
     vm.agregarCliente = AgregarCliente;
     vm.agregarClienteBD = AgregarClienteBD;
@@ -38,8 +35,7 @@ function VentaController($scope, $http, $q) {
     vm.RegistrarVentaCervezaBD = RegistrarVentaCervezaBD;
     vm.ConsumeServicePromise = ConsumeServicePromise;
     vm.clean = Clean;
-
-
+	//==============================================
 
     vm.inictr();
     /**

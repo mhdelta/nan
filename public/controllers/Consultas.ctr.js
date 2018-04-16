@@ -366,7 +366,5 @@ function ConsultasController($scope, $http, $q) {
             console.log(e);
         }
     }
-
-
 }
 

@@ -8,7 +8,7 @@ function CompraController($scope, $http, $q) {
         delete $scope.vm;
     });
     var vm = this;
-
+	//==============================================
     //Variables
     vm.compra = {
         cantidad: null,
@@ -18,9 +18,9 @@ function CompraController($scope, $http, $q) {
     };
     vm.submit = false;
     vm.sabores;
-    vm.selected;
+	vm.selected;
+	//==============================================	
     //Métodos
-
     vm.agregarSabor = AgregarSabor;
     vm.agregarSaborBD = AgregarSaborBD;
     vm.RegistrarCompra = RegistrarCompra;
@@ -32,7 +32,7 @@ function CompraController($scope, $http, $q) {
     vm.ConsumeServicePromise = ConsumeServicePromise;
     vm.tooBig = TooBig;
     vm.clean = Clean;
-
+	//==============================================
 
 
     vm.inictr();
@@ -49,8 +49,12 @@ function CompraController($scope, $http, $q) {
 
         }
     }
-
-    function InicializarSabores() {
+/**
+ * @description Trae los sabores localizados en la base de datos
+ * @author Miguel Ángel Henao Pérez
+ * @return {void}
+ */
+function InicializarSabores() {
         try {
             vm.traerSabores()
                 .then(function (response) {
@@ -68,8 +72,12 @@ function CompraController($scope, $http, $q) {
             console.log(error)
         }
     }
-
-    function AgregarSabor() {
+/**
+ * @description Permite agregar un sabor a la base de datos
+ * @author Miguel Ángel Henao Pérez
+ * @return {void}
+ */
+function AgregarSabor() {
         try {
             bootbox.prompt("Nombre del nuevo sabor", function (result) {
                 if (result) {
