@@ -37,7 +37,7 @@ $ wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.9/install.sh 
 Posteriormente ejecute lo siguiente:
 
 ```sh
-$ cd usersApp
+$ cd lecter
 $ nvm install node 8.9.4
 $ npm install
 $ node server.js
@@ -52,7 +52,7 @@ $ npm install -g n
 Posteriormente ejecute lo siguiente:
 
 ```sh
-$ cd usersApp
+$ cd lecter
 $ n 8.9.4
 $ n 8.9.4
 $ npm install
