@@ -28,7 +28,7 @@ Lecter utiliza algunas dependecias para funcionar correctamente:
 Lecter requiere [Node.js](https://nodejs.org/) en su versión 8.9.4 para funcionar.
 Instale node, y a través del manejador de paquetes npm instale las dependencias.
 
-##Linux
+## Linux
 Procure inicialmente cambiar la versión de node con [NVM](https://github.com/creationix/nvm) 
 Puede instalar facilmente nvm usando el comando: 
 ```sh
@@ -43,7 +43,7 @@ $ npm install
 $ node server.js
 ```
 
-##Windows
+## Windows
 Procure inicialmente cambiar la versión de node con [n](https://github.com/tj/n) 
 Puede instalar facilmente n usando el comando: 
 ```sh
